@@ -8,11 +8,11 @@ Universitas Pelita Bangsa
 
 ## Persiapan
 Beberapa ekstensi PHP perlu diaktifkan untuk kebutuhan pengembangan Codeigniter 4. Berikut beberapa ekstensi yang perlu diaktifkan:
-• php-json ekstension untuk bekerja dengan JSON;
-• php-mysqlnd native driver untuk MySQL;
-• php-xml ekstension untuk bekerja dengan XML;
-• php-intl ekstensi untuk membuat aplikasi multibahasa;
-• libcurl (opsional), jika ingin pakai Curl.
+* php-json ekstension untuk bekerja dengan JSON;
+* php-mysqlnd native driver untuk MySQL;
+* php-xml ekstension untuk bekerja dengan XML;
+* php-intl ekstensi untuk membuat aplikasi multibahasa;
+* libcurl (opsional), jika ingin pakai Curl.
 
 Untuk mengaktifkan ekstentsi tersebut melalui `XAMPP Control Panel`, pada bagian `Apache` klik `Config` -> `PHP.ini`
 ![LANGKAH 1](https://user-images.githubusercontent.com/22215113/121983497-9d813080-cdbb-11eb-92f1-e932329732d2.png)
@@ -23,10 +23,10 @@ Kemudian buat folder baru dengan nama `lab11_php_ci` pada doc root webserver `(h
 
 ## Installasi CODEIGNITER
 Ada dua cara installasi Codeigniter, yaitu cara `manual` dan menggunakan `composer`. Pada praktik kali ini menggunakan cara `manual`:
-• Unduh Codeigniter dari website https://codeigniter.com/download
-• Extrak file zip Codeigniter ke direktori htdocs/lab11_php_ci.
-• Ubah nama direktory framework-4.x.xx menjadi ci4.
-• Buka browser dengan alamat http://localhost/lab11_php_ci/ci4/public/
+* Unduh Codeigniter dari website https://codeigniter.com/download
+* Extrak file zip Codeigniter ke direktori htdocs/lab11_php_ci.
+* Ubah nama direktory framework-4.x.xx menjadi ci4.
+* Buka browser dengan alamat http://localhost/lab11_php_ci/ci4/public/
 ![LANGKAH 5](https://user-images.githubusercontent.com/22215113/121984000-6bbc9980-cdbc-11eb-9272-424122175f4f.png)
 
 ## Menjalankan CLI (Command Line Interface)
@@ -43,40 +43,32 @@ Semua jenis error akan ditampilkan sama. Untuk memudahkan mengetahui jenis error
 
 ## Struktur Direktori pada Codeigniter
 Terdapat beberapa direktori dan file yang perlu dipahami fungsi dan kegunaannya.
-• .github folder ini kita butuhkan untuk konfigurasi repo github, seperti konfigurasi
+* .github folder ini kita butuhkan untuk konfigurasi repo github, seperti konfigurasi
 untuk build dengan github action;
-• app folder ini akan berisi kode dari aplikasi yang kita kembangkan;
-• public folder ini berisi file yang bisa diakses oleh publik, seperti file index.php,
-robots.txt, favicon.ico, ads.txt, dll;
-• tests folder ini berisi kode untuk melakukan testing dengna PHPunit;
-• vendor folder ini berisi library yang dibutuhkan oleh aplikasi, isinya juga termasuk
+* app folder ini akan berisi kode dari aplikasi yang kita kembangkan;
+* public folder ini berisi file yang bisa diakses oleh publik, seperti file index.php, robots.txt, favicon.ico, ads.txt, dll;
+* tests folder ini berisi kode untuk melakukan testing dengna PHPunit;
+* vendor folder ini berisi library yang dibutuhkan oleh aplikasi, isinya juga termasuk
 kode core dari system CI.
-• writable folder ini berisi file yang ditulis oleh aplikasi. Nantinya, kita bisa pakai
-untuk menyimpan file yang di-upload, logs, session, dll.
+* writable folder ini berisi file yang ditulis oleh aplikasi. Nantinya, kita bisa pakai untuk menyimpan file yang di-upload, logs, session, dll.
 
 Sedangkan file-file yang berada pada root direktori CI sebagai berikut.
-• .env adalah file yang berisi variabel environment yang dibutuhkan oleh aplikasi.
-• .gitignore adalah file yang berisi daftar nama file dan folder yang akan diabaikan
-oleh Git.
-• build adalah script untuk mengubah versi codeigniter yang digunakan. Ada versi
-release (stabil) dan development (labil).
-• composer.json adalah file JSON yang berisi informasi tentang proyek dan daftar
-library yang dibutuhkannya. File ini digunakan oleh Composer sebagai acuan.
-• composer.lock adalah file yang berisi informasi versi dari libraray yang digunakan
-aplikasi.
-• license.txt adalah file yang berisi penjelasan tentang lisensi Codeigniter;
-• phpunit.xml.dist adalah file XML yang berisi konfigurasi untuk PHPunit.
-• README.md adalah file keterangan tentang codebase CI. Ini biasanya akan
-dibutuhkan pada repo github atau gitlab.
-• spark adalah program atau script yang berfungsi untuk menjalankan server,
-generate kode, dll.
+* .env adalah file yang berisi variabel environment yang dibutuhkan oleh aplikasi.
+* .gitignore adalah file yang berisi daftar nama file dan folder yang akan diabaikan oleh Git.
+* build adalah script untuk mengubah versi codeigniter yang digunakan. Ada versi release (stabil) dan development (labil).
+* composer.json adalah file JSON yang berisi informasi tentang proyek dan daftar library yang dibutuhkannya. File ini digunakan oleh Composer sebagai acuan.
+* composer.lock adalah file yang berisi informasi versi dari libraray yang digunakan aplikasi.
+* license.txt adalah file yang berisi penjelasan tentang lisensi Codeigniter;
+* phpunit.xml.dist adalah file XML yang berisi konfigurasi untuk PHPunit.
+* README.md adalah file keterangan tentang codebase CI. Ini biasanya akan dibutuhkan pada repo github atau gitlab.
+* spark adalah program atau script yang berfungsi untuk menjalankan server, generate kode, dll.
 
 ## Konsep MVC
 Codeigniter menggunakan konsep pemrograman berorientasi objek dalam mengimplementasikan konsep MVC.
-• `Model` merupakan kode program yang berisi pemodelan data. Data dapat berupa database ataupun sumber lainnya.
-• `View` merupakan kode program yang berisi bagian yang menangani terkait tampilan user interface sebuah aplikasi. didalam aplikasi web biasanya pasti akan berhubungan dengan `html` dan `css`.
-• `Controller` merupakaan kode program yang berkaitan dengan logic proses yang menghubungkan antara view dan model. Controller berfungsi untuk menerima request dan data dari user kemudian diproses dengan menghubungkan bagian model dan view.
-• `Routing dan Controller`
+* `Model` merupakan kode program yang berisi pemodelan data. Data dapat berupa database ataupun sumber lainnya.
+* `View` merupakan kode program yang berisi bagian yang menangani terkait tampilan user interface sebuah aplikasi. didalam aplikasi web biasanya pasti akan berhubungan dengan `html` dan `css`.
+* `Controller` merupakaan kode program yang berkaitan dengan logic proses yang menghubungkan antara view dan model. Controller berfungsi untuk menerima request dan data dari user kemudian diproses dengan menghubungkan bagian model dan view.
+* `Routing dan Controller`
 `Routing` merupakan proses yang mengatur arah atau rute dari request untuk menentukan fungsi/bagian mana yang akan memproses request tersebut. Pada framework CI4, routing bertujuan untuk menentukan Controller mana yang harus merespon sebuah request. `Controller` adalah class atau script yang bertanggung jawab merespon sebuah request.
 Pada Codeigniter, request yang diterima oleh file index.php akan diarahkan ke Router untuk meudian oleh router tesebut diarahkan ke Controller.
 Router terletak pada file `app/config/Routes.php`
