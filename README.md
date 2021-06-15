@@ -164,9 +164,13 @@ public function about()
 ## Membuat Layout Web dengan CSS
 Pada dasarnya layout web dengan css dapat diimplamentasikan dengan mudah pada Codeigniter. Yang perlu diketahui adalah, pada Codeigniter 4 file yang menyimpan asset `css` dan `javascript` terletak pada direktori `public`.
 Buat file css pada direktori public dengan nama `style.css`
+
 ![19](https://user-images.githubusercontent.com/22215113/121986220-55184180-cdc0-11eb-9392-4b6d30321bbf.png)
+
 Kemudian buat folder template pada direktori view kemudian buat file `header.php` dan `footer.php`
+
 ![20](https://user-images.githubusercontent.com/22215113/121986369-94469280-cdc0-11eb-92be-a87c4ab67bc3.png)
+
 File `app/view/template/header.php`
 ```
 <!DOCTYPE html>
