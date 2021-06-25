@@ -904,3 +904,313 @@ Tambahkan fungsi/method baru pada `Controller Artikel` dengan nama `delete()`.
 ```
 
 ![27](https://user-images.githubusercontent.com/22215113/122673525-0a9d2780-d1fb-11eb-974f-d9cc8c4d49ff.png)
+
+# Praktikum 13 - Lanjutan Codeigniter - Pemrograman Web
+```
+Veno Setyoaji Wiratama
+311910363
+TI.19.A.2
+Universitas Pelita Bangsa
+```
+
+## Persiapan
+Buat Tabel User pada Database `lab_ci4`
+```
+CREATE TABLE artikel (
+ id INT(11) auto_increment,
+ judul VARCHAR(200) NOT NULL,
+ isi TEXT,
+ gambar VARCHAR(200),
+ status TINYINT(1) DEFAULT 0,
+ slug VARCHAR(200),
+ PRIMARY KEY(id)
+);
+```
+
+![1](https://user-images.githubusercontent.com/22215113/123453436-c13d4580-d609-11eb-81e0-79f2f2d645bb.png)
+
+## Langkah 1 - Membuat Model User
+Selanjutnya adalah membuat Model untuk memproses data Login. Buat file baru pada direktori `app/Models` dengan nama `UserModel.php`
+```
+<?php
+
+namespace App\Models;
+
+use CodeIgniter\Model;
+
+class UserModel extends Model
+{
+    protected $table = 'user';
+    protected $primaryKey = 'id';
+    protected $useAutoIncrement = true;
+    protected $allowedFields = ['username', 'useremail', 'userpassword'];
+}
+```
+
+![2](https://user-images.githubusercontent.com/22215113/123453638-f2b61100-d609-11eb-8dee-40bab1733b0e.png)
+
+## Langkah 2 - Membuat Controller User
+Buat Controller baru dengan nama `User.php` pada direktori `app/Controllers`. Kemudian tambahkan method `index()` untuk menampilkan daftar user, dan method `login()` untuk proses login.
+```
+<?php
+
+namespace App\Controllers;
+
+use App\Models\UserModel;
+
+class User extends BaseController
+{
+    public function index()
+    {
+        $title = 'Daftar User';
+        $model = new UserModel();
+        $users = $model->findAll();
+        return view('user/index', compact('users', 'title'));
+    }
+
+    public function login()
+    {
+        helper(['form']);
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+        if (!$email)
+        {
+            return view('user/login');
+        }
+
+        $session = session();
+        $model = new UserModel();
+        $login = $model->where('useremail', $email)->first();
+        if ($login)
+        {
+            $pass = $login['userpassword'];
+            if (password_verify($password, $pass))
+            {
+            $login_data = [
+                'user_id' => $login['id'],
+                'user_name' => $login['username'],
+                'user_email' => $login['useremail'],
+                'logged_in' => TRUE,
+            ];
+            $session->set($login_data);
+            return redirect('admin/artikel');
+        }
+        else
+        {
+            $session->setFlashdata("flash_msg", "Password salah.");
+            return redirect()->to('/user/login');
+            }
+        }
+        else
+        {
+            $session->setFlashdata("flash_msg", "email tidak terdaftar.");
+            return redirect()->to('/user/login');
+        }
+    }
+}
+```
+
+![3(1)](https://user-images.githubusercontent.com/22215113/123453821-137e6680-d60a-11eb-8475-0ffeaecc32dc.png)
+
+![3(2)](https://user-images.githubusercontent.com/22215113/123453832-15482a00-d60a-11eb-88c9-24488886e4e1.png)
+
+## Langkah 3 - Membuat View Login
+Buat `folder` baru dengan nama `user` pada direktori `app/views`, kemudian buat file baru dengan nama `login.php`. 
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="<?= base_url('/style.css');?>">
+</head>
+<body>
+    <div id="login-wrapper">
+        <h1>Sign In</h1>
+        <?php if(session()->getFlashdata('flash_msg')):?>
+            <div class="alert alert-danger"><?=session()->getFlashdata('flash_msg') ?></div>
+        <?php endif;?>
+        <form action="" method="post">
+            <div class="mb-3">
+                <label for="InputForEmail" class="form-label">Email address</label>
+                <input type="email" name="email" class="form-control" id="InputForEmail" value="<?= set_value('email') ?>">
+            </div>
+            <div class="mb-3">
+                <label for="InputForPassword" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="InputForPassword">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</body>
+</html>
+```
+
+![4](https://user-images.githubusercontent.com/22215113/123454004-47f22280-d60a-11eb-9056-09683fc419e1.png)
+
+## Langkah 4 - Membuat Database Seeder
+Database seeder digunakan untuk membuat data dummy. Untuk keperluan ujicoba modul login, kita perlu memasukkan data user dan password kedalam database. Untuk itu buat database seeder untuk tabel user. Buka `CLI`, kemudian tulis perintah berikut:
+```
+php spark make:seeder UserSeeder
+```
+
+![5](https://user-images.githubusercontent.com/22215113/123454140-6e17c280-d60a-11eb-92f3-93e715144209.png)
+
+Selanjutnya, buka file `UserSeeder.php` yang berada di lokasi direktori `/app/Database/Seeds/UserSeeder.php` kemudian isi dengan kode berikut:
+```
+<?php
+
+namespace App\Database\Seeds;
+
+use CodeIgniter\Database\Seeder;
+
+class UserSeeder extends Seeder
+{
+	public function run()
+	{
+		$model = model('UserModel');
+		$model->insert([
+			'username' => 'VenoSW',
+			'useremail' => 'veno.setyoaji30@gmail.com',
+			'userpassword' => password_hash('venosw', PASSWORD_DEFAULT),
+		]); 
+	}
+}
+```
+
+![6](https://user-images.githubusercontent.com/22215113/123454230-8851a080-d60a-11eb-84d2-b29ca6f49039.png)
+
+Selanjutnya buka kembali CLI dan ketik perintah berikut:
+```
+php spark db:seed UserSeeder
+```
+
+![7](https://user-images.githubusercontent.com/22215113/123454302-9b647080-d60a-11eb-9886-cc1d32ca085c.png)
+
+Jangan lupa jalankan perintah ini untuk menjalankan ci4 di port 8080. Buka kembali CLI dan ketik perintah berikut:
+```
+php spark serve
+```
+
+Tambahkan CSS untuk mempercantikan tampilan login. Buka file `style.css` pada direktori `ci4\public\style.css`
+```
+/* Login Wrapper */
+#login-wrapper {
+    align-items: center;
+    width: 500px;
+    margin: 10px;
+    margin-left: 30%;
+    margin-top: 50px;
+    padding: 20px;
+    box-shadow: 0 0 1em #cccccc;
+}
+
+/* Isi */
+h1{
+    margin-bottom: 20px;
+}
+
+.form-control{
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #cccccc;
+    box-sizing: border-box;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+button[type=submit]{
+    padding: 7px;
+    color: white;
+    background-color: rgb(44, 118, 148);
+    box-sizing: border-box;
+    font-size: 15px;
+    border-radius: 4px;
+}
+
+button[type=submit]:active,
+button[type=submit]:hover{
+    opacity: 75%;
+}
+```
+
+![8](https://user-images.githubusercontent.com/22215113/123454867-365d4a80-d60b-11eb-9c81-ad3d3d5f9094.png)
+
+Selanjutnya buka url http://localhost:8080/user/login seperti berikut:
+
+![9](https://user-images.githubusercontent.com/22215113/123454880-3b21fe80-d60b-11eb-9c51-c3a46b9bdbab.png)
+
+## Langkah 5 - Menambahkan Auth Filter
+Selanjutnya membuat filer untuk halaman admin. Buat file baru dengan nama `Auth.php` pada direktori `app/Filters`.
+```
+<?php namespace App\Filters;
+
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\Filters\FilterInterface;
+
+class Auth implements FilterInterface
+{
+    public function before(RequestInterface $request, $arguments = null)
+    {
+        // jika user belum login
+        if(! session()->get('logged_in')){
+            // maka redirct ke halaman login
+            return redirect()->to('/user/login');
+        }
+    }
+
+    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
+    {
+        // Do something here
+    }
+}
+```
+
+![10](https://user-images.githubusercontent.com/22215113/123455050-7290ab00-d60b-11eb-9126-dbd1c65be1ff.png)
+
+Selanjutnya buka file app/Config/Filters.php tambahkan kode berikut:
+```
+'auth' => App\Filters\Auth::class
+```
+
+![11](https://user-images.githubusercontent.com/22215113/123455078-7e7c6d00-d60b-11eb-9f68-ef95c4a74017.png)
+
+Selanjutnya buka file `app/Config/Routes.php` dan sesuaikan kodenya.
+
+![12](https://user-images.githubusercontent.com/22215113/123455149-948a2d80-d60b-11eb-87bf-cf7053b8f728.png)
+
+## Langkah 6 - Fungsi Logout
+Tambahkan method logout pada `Controller User` seperti berikut:
+```
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/user/login');
+    }
+```
+
+![16](https://user-images.githubusercontent.com/22215113/123455933-78d35700-d60c-11eb-82df-2e3fa76d473d.png)
+
+Tambahkan menu logout di header admin. Ke direktori `app\view\template` lalu buka file `admin_header.php` tambahkan kode berikut
+```
+<a href="<?= base_url('/admin/logout');?>">Logout</a>
+```
+
+![14](https://user-images.githubusercontent.com/22215113/123455677-3447bb80-d60c-11eb-9e24-6f49bd767a01.png)
+
+Tambahkan route logout dengan cara ke direktori `app\Config\Routes.php` lalu tambahkan kode berikut
+```
+$routes->add('logout', 'User::logout');
+```
+
+![15](https://user-images.githubusercontent.com/22215113/123455908-7244df80-d60c-11eb-938d-b93aef67293c.png)
+
+## Langkah 7 - Percobaan Akses Menu Admin
+Buka url dengan alamat http://localhost:8080/admin/artikel ketika alamat tersebut diakses maka, akan dimuculkan halaman login. 
+
+* Tampilan Login
+![13](https://user-images.githubusercontent.com/22215113/123456162-bb952f00-d60c-11eb-8e0e-003b969e10d9.png)
+
+* Tampilan setelah akses login
+![17](https://user-images.githubusercontent.com/22215113/123456266-d9629400-d60c-11eb-8bcc-8980fabb9b51.png)
