@@ -916,14 +916,12 @@ Universitas Pelita Bangsa
 ## Persiapan
 Buat Tabel User pada Database `lab_ci4`
 ```
-CREATE TABLE artikel (
- id INT(11) auto_increment,
- judul VARCHAR(200) NOT NULL,
- isi TEXT,
- gambar VARCHAR(200),
- status TINYINT(1) DEFAULT 0,
- slug VARCHAR(200),
- PRIMARY KEY(id)
+CREATE TABLE user (
+	id INT(11) auto_increment,
+	username VARCHAR(200) NOT NULL,
+	useremail VARCHAR(200),
+	userpassword VARCHAR(200),
+	PRIMARY KEY(id)
 );
 ```
 
