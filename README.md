@@ -1212,3 +1212,208 @@ Buka url dengan alamat http://localhost:8080/admin/artikel ketika alamat tersebu
 
 * Tampilan setelah akses login
 ![17](https://user-images.githubusercontent.com/22215113/123456266-d9629400-d60c-11eb-8bcc-8980fabb9b51.png)
+
+# Praktikum 14 - Lanjutan Codeigniter - Pemrograman Web
+```
+Veno Setyoaji Wiratama
+311910363
+TI.19.A.2
+Universitas Pelita Bangsa
+```
+
+## Langkah 1 - Membuat Pagination
+Pagination merupakan proses yang digunakan untuk membatasi tampilan yang panjang dari data yang banyak pada sebuah website. Fungsi pagination adalah memecah tampilan menjadi beberapa halaman tergantung banyaknya data yang akan ditampilkan pada setiap halaman.
+Untuk membuat pagination, buka Kembali Controller Artikel `(htdocs\lab11_php_ci\ci4\Controllers\Artikel.php)`, kemudian modifikasi kode pada method `admin_index` seperti berikut.
+```
+public function admin_index()
+{
+	 $title = 'Daftar Artikel';
+	 $model = new ArtikelModel();
+	 $data = [
+	 'title' => $title,
+	 'artikel' => $model->paginate(10), #data dibatasi 10 record perhalaman
+	 'pager' => $model->pager,
+	 ];
+	 return view('artikel/admin_index', $data);
+}
+```
+
+![1](https://user-images.githubusercontent.com/22215113/124354357-cae03200-dc35-11eb-8f3f-dd6e2aadce92.png)
+
+Kemudian buka file `views/artikel/admin_index.php` dan tambahkan kode berikut dibawah deklarasi tabel data.
+```
+<?= $pager->links(); ?>
+```
+
+![2](https://user-images.githubusercontent.com/22215113/124354375-e21f1f80-dc35-11eb-87b0-7cfa5a626433.png)
+
+Kemudian buka file `public/admin.css` tambahkan kode berikut untuk mempercantik tampilan `pagination`
+```
+/* PAGINATION */
+.pagination {
+    display: inline-block;
+    padding-left: 20px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: .25rem;
+}
+  
+.pagination > li {
+    display: inline;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+    position: relative;
+    float: left;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.5;
+    color: #0275d8;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+    z-index: 2;
+    color: #fff;
+    cursor: default;
+    background-color: #0275d8;
+    border-color: #0275d8;
+}
+```
+
+![3](https://user-images.githubusercontent.com/22215113/124354453-4215c600-dc36-11eb-9a65-cd67980018c3.png)
+
+Selanjutnya buka kembali menu daftar artikel, tambahkan data lagi untuk melihat hasilnya.
+
+![4](https://user-images.githubusercontent.com/22215113/124354460-5063e200-dc36-11eb-940d-1f32c10f5993.png)
+
+## Langkah 2 - Membuat Pencarian
+Pencarian data digunakan untuk memfilter data. Untuk membuat pencarian data, buka kembali Controller Artikel `(htdocs\lab11_php_ci\ci4\Controllers\Artikel.php)`, pada method `admin_index` ubah kodenya seperti berikut
+```
+public function admin_index()
+{
+	 $title = 'Daftar Artikel';
+	 $q = $this->request->getVar('q') ?? '';
+	 $model = new ArtikelModel();
+	 $data = [
+	 'title' => $title,
+	 'q' => $q,
+	 'artikel' => $model->like('judul', $q)->paginate(2), # data dibatasi 2 record per halaman
+	 'pager' => $model->pager,
+	 ];
+	 return view('artikel/admin_index', $data);
+}
+```
+
+![5](https://user-images.githubusercontent.com/22215113/124354514-902ac980-dc36-11eb-9ad2-1408ee9bbfae.png)
+
+Kemudian buka kembali file `views/artikel/admin_index.php` dan tambahkan form pencarian sebelum deklarasi tabel seperti berikut:
+```
+<form method="get" class="form-search">
+   <input type="text" name="q" value="<?= $q; ?>" placeholder="Cari data">
+   <input type="submit" value="Cari" class="btn btn-primary">
+</form>
+```
+
+![6](https://user-images.githubusercontent.com/22215113/124354532-a769b700-dc36-11eb-8957-ee6301fe8ee4.png)
+
+Dan pada link pager ubah seperti berikut.
+```
+<?= $pager->only(['q'])->links(); ?>
+```
+
+![7](https://user-images.githubusercontent.com/22215113/124354546-b94b5a00-dc36-11eb-96b9-f77a3bcb5c12.png)
+
+Kemudian buka file `public/admin.css` tambahkan kode berikut untuk mempercantik tampilan `pencarian`
+```
+/* SEARCH */
+.form-search input[type=text]{
+    width: 27%;
+    border: 2px solid gray;
+    box-sizing: border-box;
+    font-size: 15px;
+    margin: 30px;
+    margin-bottom: 10px;
+}
+
+.btn-primary{
+    background-color: rgb(30, 117, 216);
+    color: white;
+    box-sizing: border-box;
+    font-size: 15px;
+    margin: auto;   
+}
+
+.btn-primary:active,
+.btn-primary:hover{
+    opacity: 80%;
+}
+```
+![9](https://user-images.githubusercontent.com/22215113/124354599-00394f80-dc37-11eb-902f-13523a5e84a4.png)
+
+Selanjutnya ujicoba dengan membuka kembali halaman admin artikel, masukkan kata kunci tertentu pada form pencarian.
+
+![8](https://user-images.githubusercontent.com/22215113/124354607-0b8c7b00-dc37-11eb-93eb-31584540b190.png)
+
+## Langkah 3 - Upload Gambar
+Menambahkan fungsi unggah gambar pada tambah artikel. Buka kembali Controller Artikel `(htdocs\lab11_php_ci\ci4\Controllers\Artikel.php)`, sesuaikan kode pada method add seperti berikut:
+```
+    public function add()
+    {
+        // validasi data.
+        $validation = \Config\Services::validation();
+        $validation->setRules(['judul' => 'required']);
+        $isDataValid = $validation->withRequest($this->request)->run();
+        
+        if ($isDataValid)
+        {
+            $file = $this->request->getFile('gambar');
+            $file->move(ROOTPATH . 'public/gambar');
+            
+            $artikel = new ArtikelModel();
+            $artikel->insert([
+                'judul' => $this->request->getPost('judul'),
+                'isi' => $this->request->getPost('isi'),
+                'slug' => url_title($this->request->getPost('judul')),
+                'gambar' => $file->getName(),
+            ]);
+            return redirect('admin/artikel');
+        }
+        $title = "Tambah Artikel";
+        return view('artikel/form_add', compact('title'));
+    }
+```
+
+![10](https://user-images.githubusercontent.com/22215113/124354696-6e7e1200-dc37-11eb-87cf-34bfab3d0fb2.png)
+
+Kemudian pada file `views/artikel/form_add.php` tambahkan field input file seperti berikut.
+```
+ <p>
+      <input type="file" name="gambar">
+ </p>
+```
+Dan sesuaikan tag form dengan menambahkan ecrypt type seperti berikut.
+```
+<form action="" method="post" enctype="multipart/form-data">
+```
+![11](https://user-images.githubusercontent.com/22215113/124354722-979ea280-dc37-11eb-8349-51dc81cc3dbf.png)
+
+Kemudian buka file `public/admin.css` tambahkan kode berikut untuk mempercantik tampilan `tomboll upload gambar`
+```
+/* INPUT GAMBAR */
+input[type=file]{
+    margin: 20px;
+}
+```
+![12](https://user-images.githubusercontent.com/22215113/124354743-b1d88080-dc37-11eb-9e16-fa7a73e247f8.png)
+
+Ujicoba file upload dengan mengakses menu tambah artikel.
+
+![13](https://user-images.githubusercontent.com/22215113/124354746-b6049e00-dc37-11eb-8e9b-ef21b89c24bb.png)
